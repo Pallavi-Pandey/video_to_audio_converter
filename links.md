@@ -24,3 +24,13 @@ https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinar
 ```
 curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+```
+
+5) install k9s
+https://github.com/derailed/k9s
+
+```
+wget https://github.com/derailed/k9s/releases/latest/download/k9s_linux_amd64.deb \
+&& sudo apt install ./k9s_linux_amd64.deb -y \
+&& rm k9s_linux_amd64.deb
+```
