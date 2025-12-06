@@ -6,10 +6,10 @@ GRANT ALL PRIVILEGES ON auth.* TO 'auth_user'@'localhost';
 
 USE auth;
 
-CREATE TABLE users (
+CREATE TABLE user (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(225) NOT NULL,
+    email VARCHAR(225) NOT NULL UNIQUE,
     password VARCHAR(225) NOT NULL
 );
 
-INSERT INTO users (email, password) VALUES ('admin@email.com', 'admin');
+INSERT INTO user (email, password) VALUES ('admin@email.com', 'admin');

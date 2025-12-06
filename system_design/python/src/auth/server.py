@@ -1,6 +1,7 @@
 import jwt, datetime, os
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_mysqldb import MySQL
+from werkzeug.security import check_password_hash
 
 server = Flask(__name__)
 mysql = MySQL(server)
@@ -15,8 +16,24 @@ server.config['MYSQL_PORT'] = os.environ.get('MYSQL_PORT')
 @server.route('/login', methods=['POST'])
 def login():
     auth = request.authorization
-    if not auth or not auth.username or not auth.password:
-        return jsonify({'message': 'Missing credentials'}), 401
-    return jsonify({'message': 'Login successful'}), 200
+    if not auth:
+        return 'message credentials', 401
+
+    #check db for username and password
+    cur = mysql.connection.cursor()
+    res = cur.execute(
+        'SELECT email, password FROM user WHERE email = %s', (auth.username,)
+    )    
+    if res > 0:
+        user_row = cur.fetchone()
+        email = user_row[0]
+        password = user_row[1]
+        
+        if auth.username != email or auth.password != password:
+            return 'invalid credentials', 401
+        else:
+            return createJWT(auth.username, os.environ.get('JWT_SECRET'), True)
+    else:
+        return 'invalid credentials', 401
 
  
