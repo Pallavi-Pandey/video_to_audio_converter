@@ -14,3 +14,8 @@
     - It is a great way to test your applications in a local environment before deploying them to a production environment.
     - it is going to allow us to have a kubernetes cluster running on our local machine
    
+- What is k9s?
+    - k9s is a terminal-based UI for Kubernetes clusters.
+    - It is a great way to get started with Kubernetes and to test your applications in a local environment.
+    - It is also a great way to learn about Kubernetes and to understand how it works.
+    - It is a great way to test your applications in a local environment before deploying them to a production environment.
