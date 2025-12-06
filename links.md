@@ -34,3 +34,8 @@ wget https://github.com/derailed/k9s/releases/latest/download/k9s_linux_amd64.de
 && sudo apt install ./k9s_linux_amd64.deb -y \
 && rm k9s_linux_amd64.deb
 ```
+
+6) install mysql
+```sudo apt update
+sudo apt install mysql-server -y
+```
