@@ -27,6 +27,40 @@ def login():
         if auth.username!=email or auth.password!=password:
             return "invalid credentials",401
         else:
-            token=createJWT(auth.username,os.environ.get("JWT_SECRET"),True)
+            return createJWT(auth.username,os.environ.get("JWT_SECRET"),True)
     else:
         return "invalid credentials",401
+
+
+def createJWT(username,secret,authz):
+    return jwt.encode({
+        "username":username,
+        "authz":authz,
+        "exp":datetime.datetime.now(tz=datetime.timezone.utc)+datetime.timedelta(days=1),
+        "iat":datetime.datetime.utcnow()
+    },secret,algorithm="HS256")
+
+
+@server.route("/validate",method=["POST"])
+def validate():
+    encoded_jwt=request.headers["Authorization"]
+
+    if not encoded_jwt:
+        return "missing jwt",401
+
+    encoded_jwt=encoded_jwt.split(" ")[1]
+
+    try:
+        decoded_jwt=jwt.decode(encoded_jwt,os.environ.get("JWT_SECRET"),algorithms=["HS256"])
+        return decoded_jwt,200
+    except:
+        return "invalid jwt",401
+
+    
+    
+    
+
+
+if __name__=="__main__":
+    server.run(port=5000,host="0.0.0.0")
+     
