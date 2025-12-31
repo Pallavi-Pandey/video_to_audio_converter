@@ -5,6 +5,7 @@ def upload(f,fs,channel,access):
     try:
         fid=fs.put(f)
     except Exception as err:
+        print("error storing file: "+str(err))
         return "error storing file: "+str(err),500
     message={
         "video_fid":str(fid),

@@ -5,7 +5,7 @@ import moviepy.editor
 
 def start(message,fs_videos,fs_mp3s,channel):
     message=json.loads(message)
-    video_id=message['video_id']
+    video_fid=message['video_fid']
 
     # empty temp file
 

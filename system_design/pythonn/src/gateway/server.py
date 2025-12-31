@@ -54,7 +54,7 @@ def upload():
     access,err= validate.token(request)
 
     access=json.loads(access)
-    if access['admin']:
+    if access['authz']:
         if len(request.files) > 1 or len(request.files)<1:
             return "exactly 1 file required",400
         

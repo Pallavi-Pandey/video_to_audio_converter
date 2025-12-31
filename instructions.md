@@ -78,3 +78,15 @@ kubectl logs -f -l app=gateway
 # Or just get recent logs (last 50 lines)
 kubectl logs -l app=gateway --tail=50
 ```
+
+- to scale the deployments to one replicas for easy debugging
+```bash
+kubectl scale deployment gateway --replicas=1
+kubectl scale deployment auth --replicas=1
+kubectl scale deployment converter --replicas=1
+```
+
+- to delete the gateway 
+```bash
+kubectl delete -f ./manifests
+```
