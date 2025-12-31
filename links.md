@@ -2,6 +2,9 @@
 1) youtube link
 - https://youtu.be/hmkF77F9TLw
 
+### i was able to watch this 
+
+
 2) original repo link - https://github.com/kantancoding/microservices-python
 
 3) install kubectl 

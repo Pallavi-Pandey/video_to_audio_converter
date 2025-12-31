@@ -1,11 +1,12 @@
 import os,gridfs,pika,json,logging,traceback,sys
 # gridfs is used to store large files in mongodb
 # pika is used to connect to rabbitmq
-from flask import Flask,request,Response
+from flask import Flask,request,Response,send_file
 from flask_pymongo import PyMongo
 from auth import validate
 from auth_svc import access
 from storage import util
+from bson.objectid import ObjectId
 
 # Configure logging to stdout with detailed formatting
 logging.basicConfig(
@@ -28,11 +29,21 @@ def handle_exception(e):
 @server.before_request
 def log_request():
     logger.info(f"Request: {request.method} {request.path} from {request.remote_addr}")
-server.config["MONGO_URI"] = os.getenv("MONGO_URI","mongodb://host.minikube.internal:27017/videos")
+mongo_host = os.getenv("MONGO_HOST", "mongodb")
+server.config["MONGO_URI"] = f"mongodb://{mongo_host}:27017/videos"
 
-mongo = PyMongo(server)
+mongo_video = PyMongo(
+    server,
+    uri=f"mongodb://{mongo_host}:27017/videos"
+)
 
-fs=gridfs.GridFS(mongo.db)
+mongo_audio = PyMongo(
+    server,
+    uri=f"mongodb://{mongo_host}:27017/mp3s"
+)
+
+fs_video=gridfs.GridFS(mongo_video.db)
+fs_audio=gridfs.GridFS(mongo_audio.db)
 
 connection=pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
 channel=connection.channel()
@@ -59,7 +70,7 @@ def upload():
             return "exactly 1 file required",400
         
         for _,f in request.files.items():
-            err=util.upload(f,fs,channel,access)
+            err=util.upload(f,fs_video,channel,access)
             if err:
                 return err
         return "success!",200
@@ -68,7 +79,25 @@ def upload():
     
 @server.route("/download",methods=["GET"])
 def download():
-    pass
+    access,err= validate.token(request)
+    if err:
+        return err
+    access=json.loads(access)
+    if access['authz']:
+        fid_string=request.args.get("fid")
+        if not fid_string:
+            return "fid is required",400
+        
+        try:
+            out=fs_audio.get(ObjectId(fid_string))
+            return send_file(out,download_name=f'{fid_string}.mp3')
+        except Exception as e:
+            print(e)
+            return "internal server error",500
+        
+    
+    return "not authorized",401
+        
 
 
 if __name__ == "__main__":

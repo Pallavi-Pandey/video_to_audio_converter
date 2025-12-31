@@ -90,3 +90,51 @@ kubectl scale deployment converter --replicas=1
 ```bash
 kubectl delete -f ./manifests
 ```
+
+- `kubectl exec -it mongodb-5ff6db945b-v8pgw -- mongosh`
+- `show databases`
+- `use mp3s`
+- `show collections`
+- `db.fs.files.find()`
+
+- `db.fs.files.find({"_id": ObjectId("6954f73eaaf3d46526cfe494")})`
+
+```bash to download the audio from mongo in kube to local
+kubectl exec mongodb-5ff6db945b-v8pgw -- mongofiles --db=mp3s get_id '{"$oid": "6954f73eaaf3d46526cfe494"}' --local=- > local_music_file.mp3
+```
+
+- to login to mysql in kube(check the password from mysql-secret.yaml)
+- `kubectl exec -it auth-mysql-84688dbb58-6dq5m -- mysql -u root -p -h 127.0.0.1`
+
+- `update user set email = "gokulakrishananm1998@gmail.com" where id=1;`
+
+
+```bash
+curl -X POST -F 'file=@/home/gokul/videoplayback.mp4' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdva3VsYWtyaXNobmFubTE5OThAZ21haWwuY29tIiwiYXV0aHoiOnRydWUsImV4cCI6MTc2NzI3MjMwMywiaWF0IjoxNzY3MTg1OTAzfQ.RmnBtY7pP649BYAH3P8R-axSX4d2bv_B3WbvV6BJ9r4' http://mp3converter.com/upload
+```
+
+- `to delete a pod in k9 press ctrl+d and then press enter`  
+
+
+```bash
+kubectl scale deployment --replicas=1 gateway converter auth notification
+```
+
+```bash
+kubectl create secret generic notification-secret --from-env-file=system_design/pythonn/src/notification/.env --dry-run=client -o yaml | kubectl apply -f -
+kubectl rollout restart deployment/notification
+```
+
+- you can even sh into any of the pods
+```bash
+k9s
+select the pod and press enter
+then press  s
+env| grep GMAIL
+```
+
+
+- to download the audio with curl
+```bash
+curl --output mp3_download.mp3 -X GET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdva3VsYWtyaXNobmFubTE5OThAZ21haWwuY29tIiwiYXV0aHoiOnRydWUsImV4cCI6MTc2NzI3MjMwMywiaWF0IjoxNzY3MTg1OTAzfQ.RmnBtY7pP649BYAH3P8R-axSX4d2bv_B3WbvV6BJ9r4" "http://mp3converter.com/download?fid=69553048ea13db3580da57d9"
+```
