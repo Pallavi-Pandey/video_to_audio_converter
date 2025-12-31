@@ -68,3 +68,21 @@
 
 - how would you tag a docker image?
     - `docker tag <image_name> <tag>`
+
+- stateful set
+    - it is a type of deployment where the pods are assigned a unique identity
+    - the pods are assigned a unique identity based on the order in which they are created
+    - if a pod fails , the existing pod will not be deleted and a new pod will be created and the volume will be mounted to the new pod with the existing data
+    - this is important for stateful applications like databases
+    
+- ![alt text](image-3.png)
+
+- how are we going to persist data in rabbitmq
+    - we can use a persistent volume to persist data in rabbitmq
+![alt text](image-4.png)
+- compare the gateway and rabbitmq containers in spec
+
+- what is PVC(persistent volume claim)?
+    - it is a request for a persistent volume
+    - it is bound to a persistent volume, we will set how much storage we need in the pvc, it will interact with the persistent volume and bind it to the pvc
+    - this means when a pod dies , the rabbitmq data will not be lost, it will be persisted in the persistent volume

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+spec:
+  serviceName: "not-applicable"
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3-management # official image with management ui
+        ports:
+          - name: http
+            protocol: TCP
+            containerPort: 15672 # management ui
+          - name: amqp # advance message queing protocol to send messages to queue
+            protocol: TCP
+            containerPort: 5672 # access rabbitmq messages
+        envFrom:
+          - configMapRef:
+              name: rabbitmq-configmap
+          - secretRef:
+              name: rabbitmq-secret
+        volumeMounts:
+          - name: rabbitmq-volume
+            mountPath: /var/lib/rabbitmq
+      volumes:
+        - name: rabbitmq-volume
+          persistentVolumeClaim:
+            claimName: rabbitmq-pvc

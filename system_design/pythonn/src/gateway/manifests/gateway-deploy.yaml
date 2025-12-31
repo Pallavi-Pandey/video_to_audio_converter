@@ -20,7 +20,8 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: gokulkris/gateway
+          image: gokulkris/gateway:latest
+          imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: gateway-configmap
