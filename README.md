@@ -11,5 +11,3 @@ Flow
     - the notification service will consume the message and send an email notification to the client , 
     - the client will use the notification_id and his jwt to request the gateway to return the converted mp3 file
     - api gateway will pull the file from mongodb and return it to the client
-
-- 
